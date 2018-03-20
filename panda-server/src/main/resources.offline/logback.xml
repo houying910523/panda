@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <property name="LOG_HOME" value="${catalina.home:-.}/logs/" />
+
+    <appender name="PROJECT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/server.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/server.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p][%thread][%c{0}:%M:%L] %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="APACHE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/apache.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/apache.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p][%c{0}:%M:%L][%X{requestURIWithQueryString}] %m%n</pattern>
+            <pattern>%d [%thread] %-5level %logger{10}  - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <logger name="com.alibaba.jstorm.ui" additivity="false" level="INFO">
+        <appender-ref ref="PROJECT"/>
+    </logger>
+    <logger name="STDERR" additivity="false" level="DEBUG">
+        <appender-ref ref="APACHE"/>
+    </logger>
+    <logger name="STDOUT" additivity="false" level="DEBUG">
+        <appender-ref ref="APACHE"/>
+    </logger>
+
+    <logger name="org.apache.zookeeper" level="ERROR">
+        <appender-ref ref="APACHE" />
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="PROJECT"/>
+    </root>
+</configuration>
